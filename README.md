@@ -11,6 +11,32 @@ These skills are near‑literal ports of the Claude Code `/cl:*` commands used i
 - `/commit`
 - `/describe_pr`
 
+## Installation
+Running `install.sh` copies `skills/` and `commands/` into `~/.codex`, making the skills available across all Codex sessions on your local machine.
+
+```bash
+git clone https://github.com/brianevanmiller/humanlayer-codex-skills.git
+cd humanlayer-codex-skills
+chmod +x install.sh
+./install.sh
+
+# By default this installs into `~/.codex`. You can override the target by setting CODEX_HOME:
+# CODEX_HOME=/some/other/path ./install.sh
+```
+
+After installation, restart Codex (TUI or editor integration) so it picks up the new skills.
+
+Verify install:
+```bash
+ls ~/.codex/skills
+```
+
+Upgrade:
+```bash
+git pull
+./install.sh
+```
+
 ## What this installs
 
 ### Skills (user-global)
@@ -58,37 +84,27 @@ These are not executable by Codex directly, but serve as reference material the 
 - For the full HumanLayer experience:
   - HumanLayer CLI + thoughts repo set up (so `humanlayer thoughts sync` and
     `thoughts/...` paths work).
-  - Linear MCP server + `linear` CLI configured if you plan to use Linear-flavored workflows.
-
-## Installation
-
-```bash
-git clone https://github.com/YOUR_ORG/humanlayer-codex-skills.git
-cd humanlayer-codex-skills
-chmod +x install.sh
-./install.sh
-
-# By default this installs into `~/.codex`. You can override the target by setting CODEX_HOME:
-# CODEX_HOME=/some/other/path ./install.sh
-```
-
-After installation, restart Codex (TUI or editor integration) so it picks up the new skills.
+- Linear MCP server + `linear` CLI configured if you plan to use Linear-flavored workflows.
 
 ## Uninstall
 
-To remove the installed skills and command docs:
+To remove only the skills and command docs installed by this repo (and leave any other
+skills intact):
 ```bash
-rm -rf ~/.codex/skills/research-codebase \
-       ~/.codex/skills/create-plan \
-       ~/.codex/skills/implement-plan \
-       ~/.codex/skills/commit-changes \
-       ~/.codex/skills/describe-pr
+CODEX_HOME="${CODEX_HOME:-"$HOME/.codex"}"
 
-rm -f ~/.codex/commands/research_codebase.md \
-      ~/.codex/commands/create_plan.md \
-      ~/.codex/commands/implement_plan.md \
-      ~/.codex/commands/commit.md \
-      ~/.codex/commands/describe_pr.md
+rm -rf "$CODEX_HOME/skills/research-codebase" \
+       "$CODEX_HOME/skills/create-plan" \
+       "$CODEX_HOME/skills/implement-plan" \
+       "$CODEX_HOME/skills/commit-changes" \
+       "$CODEX_HOME/skills/describe-pr"
+
+# Use -rf for directories (skills) and -f for files (command docs).
+rm -f "$CODEX_HOME/commands/research_codebase.md" \
+      "$CODEX_HOME/commands/create_plan.md" \
+      "$CODEX_HOME/commands/implement_plan.md" \
+      "$CODEX_HOME/commands/commit.md" \
+      "$CODEX_HOME/commands/describe_pr.md"
 ```
 (Adjust if you add the optional linear / ralph_* / handoff / oneshot commands.)
 
@@ -128,5 +144,3 @@ Codex will route to the appropriate skill based on your request.
 •  These skills are opinionated toward the HumanLayer + thoughts + Linear ecosystem.
 •  They intentionally preserve the original file naming conventions and flows so that
   existing HumanLayer users can move between Claude Code and Codex with minimal friction.
-
-
